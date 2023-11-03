@@ -40,7 +40,7 @@ This is a small library app where you can save books you enjoyed reading and tra
 * [michalosman](https://github.com/michalosman/library/tree/main)
 * [0xabdulkhalid](https://github.com/0xabdulkhalid/plibrary/tree/main)
 * [Igorashs](https://github.com/igorashs/library/tree/master)
-* [tailwindcss] (https://tailwindcss.com/)
+* [tailwindcss](https://tailwindcss.com/)
 <br>
 
 ### To-Dos
