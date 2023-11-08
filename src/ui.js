@@ -17,7 +17,7 @@ export const error_msg = document.getElementById('errorTitle');
 export const title_input = document.getElementById('title');
 export const author_input = document.getElementById('author');
 // mySelectedItems for genres
-//export const read_pg_input = document.getElementById('pgRead'); 
+export const read_pg_input = document.getElementById('pgRead'); 
 //!!!
 export const book_length_input = document.getElementById('totalPg');
 export const book_progress_input = document.getElementById('myBar');

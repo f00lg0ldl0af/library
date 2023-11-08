@@ -36,7 +36,7 @@ import {
     // Field inputs
     title_input,
     author_input,
-    //read_pg_input, // !!! 
+    read_pg_input, // !!! 
     book_length_input,
     book_progress_input,
     last_read_input,
@@ -130,7 +130,23 @@ const openBookModal = () => {
   rating_input.innerHTML ='';
   let bar = document.getElementById('myBar');
   bar.innerHTML = "1% read";
-  dropdownButton.innerText = 'Select Book Genre(s)';
+  mySelectedGenres = []; 
+
+  dropdownButton.innerText = mySelectedGenres.length > 0 ? mySelectedGenres.join(', ') : 'Select Book Genre(s)'; 
+
+  /*
+  
+function handleCB(event) { 
+    const checkbox = event.target; 
+    if (checkbox.checked) { 
+        mySelectedGenres.push(checkbox.value); 
+    } else { 
+      mySelectedGenres =  mySelectedGenres.filter((item) => item !== checkbox.value); 
+    } 
+
+    dropdownButton.innerText = mySelectedGenres.length > 0 ? mySelectedGenres.join(', ') : 'Select Book Genre(s)'; 
+} 
+  */
 
   bookModal.classList.add('moveup-animate');
   overlay.classList.add('active');
@@ -170,7 +186,7 @@ const acBook = (e) => {
 
   } else {
     // remove books from local storage
-    lib.clearAllFromLib(); // does not work !!!
+    lib.clearAllFromLib();
 
     saveLocalStore() ;
     updateBooksGrid();
@@ -298,7 +314,7 @@ const getBookProperties = () =>  {
   const title = title_input.value;
   const author = author_input.value;
   const genres = mySelectedGenres; // this is an array
-  //const read_page = read_pg_input.value;
+  const read_page = read_pg_input.value; // !!!
   const book_length = book_length_input.value;
   const book_progress = book_progress_input.innerHTML;
   const last_read = last_read_input.value; // e.g., 2023-11-07
@@ -310,7 +326,7 @@ const getBookProperties = () =>  {
     title, 
     author,
     genres,
-    //read_page, 
+    read_page, // !!!
     book_length,
     book_progress,
     last_read,
@@ -403,7 +419,7 @@ const bookConverterFS = (someBookArray) => {
       bk.data().title, 
       bk.data().author,
       bk.data().genres, 
-      // bk.data().read_page // !!!
+      bk.data().read_page, // !!!
       bk.data().book_length,
       bk.data().book_progress,
       bk.data().last_read,
@@ -424,7 +440,7 @@ const addBookDB = async (newBook) => {
       title: newBook.title,
       author: newBook.author,
       genres: newBook.genres,
-      //read_page: newBook.read_page, // !!!
+      read_page: newBook.read_page, // !!!
       book_length: newBook.book_length,
       book_progress: newBook.book_progress,
       last_read: newBook.last_read,
@@ -490,7 +506,7 @@ const bookConverterJSON = (bk) => {
     bk.title, 
     bk.author,
     bk.genres, 
-    //bk.read_page,
+    bk.read_page, // !!!
     bk.book_length,
     bk.book_progress,
     bk.last_read,
@@ -743,7 +759,7 @@ const getPrevBookModal = (book) => {
 
   dropdownButton.innerText = mySelectedGenres.length > 0 ? mySelectedGenres.join(', ') : 'Select Book Genre(s)'; 
 
-  //read_pg_input.value = book.read_page;
+  read_pg_input.value = book.read_page; // !!!
   book_length_input.value = book.book_length;
   book_progress_input.innerHTML = book.book_progress;
   
@@ -786,6 +802,7 @@ const updateBookDB = async (newBook, prevBkTitle) => {
     title: newBook.title,
     author: newBook.author,
     genres: newBook.genres,
+    read_page: newBook.read_page, // !!!
     book_length: newBook.book_length,
     book_progress: newBook.book_progress,
     last_read: newBook.last_read,

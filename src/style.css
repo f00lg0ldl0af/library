@@ -34,9 +34,13 @@
   box-sizing: border-box;
   padding: 0;
   margin: 0;
-  font-family: 'Poppins', sans-serif;
-
 }
+
+/*
+Do not set font family in the universal rule, instead do it in body or html. (boxsizing, margin and padding those 3 are okay).
+
+Because of inheritance and specificity, you are overriding the inherited value that comes from the font awesome class
+*/
 
 html {
   /* footer support */
@@ -49,18 +53,7 @@ body {
   color: var(--white);
   font-size: 18px;
   font-weight: 500;
-}
-
-
-/* CSS RESET */
-*,
-*::before,
-*::after {
-box-sizing: border-box;
-padding: 0;
-margin: 0;
-font-family: 'Poppins', sans-serif;
-
+  font-family: 'Poppins', sans-serif;
 }
 
 button,
@@ -170,7 +163,7 @@ main {
 }
 
 .book-card {
-  width: 80%;
+  
   min-height: 200px;
   max-height: fit-content;
   display: grid;
@@ -362,7 +355,8 @@ main {
 }
 
 .popmodal p {
-  margin-top: 10px;
+  position: relative;
+  top: 30px;
 
 }
 

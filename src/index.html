@@ -23,7 +23,7 @@
 
     <link rel="shortcut icon" href="./images/library.png"> 
 
-     <script src="https://kit.fontawesome.com/044760a194.js" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/044760a194.js" crossorigin="anonymous"></script>
 
      
 
@@ -76,19 +76,20 @@
             <div id="editModal"></div>
         </p>
         
-        <form action="" class="book-form" id="bookForm">
+        <form action="#" method="post"  class="book-form" id="bookForm">
             
             <div class="input-row">
-                <div class="input-container">
-                    <label for="title">Title</label>
-                    <input type="text" name="title" id="title" placeholder="Book Title">
+                <div>
+                    <div class="input-container">
+                        <label for="title">Title</label>
+                        <input type="text" name="title" id="title" placeholder="Book Title" required>
+                    </div>
                     <div class="error" id="errorTitle"></div>
-    
                 </div>
     
                 <div class="input-container">
                     <label for="author">Author</label>
-                    <input type="text" name="author" id="author" placeholder="Author">
+                    <input type="text" name="author" id="author" placeholder="Author" required>
                 </div>
                 
 
@@ -232,14 +233,14 @@
             <div class="input-row">
                 <div class="input-container">
                     <label class="space" for="page_read">Read</label>
-                    <input type="tel" name="page_read" id="pgRead" placeholder="0 pages" pattern="[0-9]{1,4}"> 
+                    <input type="tel" name="page_read" id="pgRead" placeholder="0 pages" pattern="[0-9]{1,4}" required> 
                 </div>
 
                 <span> Of </span>
 
                 <div class="input-container">
                     <label for="total_pages"></label> 
-                    <input type="tel" name="total_pages" id="totalPg" placeholder="Total Book Pages" pattern="[0-9]{1,4}">
+                    <input type="tel" name="total_pages" id="totalPg" placeholder="Total Book Pages" pattern="[0-9]{1,4}" required>
                     
                 </div>
                 <span> Pages </span>
@@ -263,7 +264,7 @@
                     <label for="" class="space">Status</label>
                     <div class="readstatus-container">
                         <label class="read_status">To Read
-                            <input type="radio" name="radio">
+                            <input type="radio" name="radio" required>
                         </label>
 
                         <label class="read_status">Reading
