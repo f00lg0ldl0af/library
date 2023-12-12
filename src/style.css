@@ -102,7 +102,13 @@ button:hover {
   display: block;
 }
 
+.subhead {
+  display: none;
+}
 
+.subhead.active {
+  display: block;
+}
 
 .submit-row {
   display: flex;
@@ -356,17 +362,19 @@ main {
 
 .popmodal p {
   position: relative;
-  top: 30px;
-
+  top: 10px;
 }
 
 #editModal {
   position: fixed;
-  top: 65px;
-
+  top: 15px;
 }
 
-.popmodal p span {
+#subhead1 {
+  display: none;
+}
+
+#subhead1.active {
   display: block;
   text-align: center;
 }

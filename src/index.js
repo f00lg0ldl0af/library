@@ -8,9 +8,15 @@ import {
     userState,
     profileImg,
     overlay,
-    error_msg,
+
+    error_title,
+    error_author,
+    error_readpg,
+    error_booklength,
+
     accModal,
     acBookModal,
+    addform_subhead1,
 
     // Button
     userBtn,
@@ -36,7 +42,7 @@ import {
     // Field inputs
     title_input,
     author_input,
-    read_pg_input, // !!! 
+    read_pg_input, 
     book_length_input,
     book_progress_input,
     last_read_input,
@@ -126,6 +132,7 @@ const userSignOut = async () => {
 }
 
 const openBookModal = () => {
+  addform_subhead1.classList.add('active');
   bookForm.reset();
   rating_input.innerHTML ='';
   let bar = document.getElementById('myBar');
@@ -133,20 +140,6 @@ const openBookModal = () => {
   mySelectedGenres = []; 
 
   dropdownButton.innerText = mySelectedGenres.length > 0 ? mySelectedGenres.join(', ') : 'Select Book Genre(s)'; 
-
-  /*
-  
-function handleCB(event) { 
-    const checkbox = event.target; 
-    if (checkbox.checked) { 
-        mySelectedGenres.push(checkbox.value); 
-    } else { 
-      mySelectedGenres =  mySelectedGenres.filter((item) => item !== checkbox.value); 
-    } 
-
-    dropdownButton.innerText = mySelectedGenres.length > 0 ? mySelectedGenres.join(', ') : 'Select Book Genre(s)'; 
-} 
-  */
 
   bookModal.classList.add('moveup-animate');
   overlay.classList.add('active');
@@ -183,14 +176,12 @@ const acBook = (e) => {
   if (auth.currentUser) {
     // remove all the books from db
     deleteCollection (3);
-
   } else {
     // remove books from local storage
     lib.clearAllFromLib();
 
-    saveLocalStore() ;
+    saveLocalStore();
     updateBooksGrid();
-
   }
   closeAcBookModal()
 }
@@ -213,18 +204,13 @@ const openAcBookModal = () => {
       <button id="cfmClearBtn" class="btn clearallbtn">Remove all</button>
   </div> 
   `
-  
   const cancelBtn = document.getElementById('cancelBtn');
   cancelBtn.addEventListener('click', closeAcBookModal);
-
 
   // Clear all books Function
   const acBookBtn = document.getElementById('cfmClearBtn');
   acBookBtn.addEventListener('click', acBook); 
 }
-
-
-
 
 const deleteCollection = async (batchSize) => {
   const q = query(
@@ -261,10 +247,7 @@ const deleteQueryBatch = async (db, query, resolve) => {
   process.nextTick(() => {
     deleteQueryBatch(db, query, resolve);
   })
-  */
-
-}
-
+  */}
 
 const closeAcBookModal = () => {
   acBookModal.classList.remove('moveup-animate');
@@ -272,8 +255,6 @@ const closeAcBookModal = () => {
 }
 
 clearAllBtn.addEventListener('click', openAcBookModal)
-
-
 
 const closeAllModals = () => {
   closeBookModal();
@@ -314,7 +295,7 @@ const getBookProperties = () =>  {
   const title = title_input.value;
   const author = author_input.value;
   const genres = mySelectedGenres; // this is an array
-  const read_page = read_pg_input.value; // !!!
+  const read_page = read_pg_input.value; 
   const book_length = book_length_input.value;
   const book_progress = book_progress_input.innerHTML;
   const last_read = last_read_input.value; // e.g., 2023-11-07
@@ -326,7 +307,7 @@ const getBookProperties = () =>  {
     title, 
     author,
     genres,
-    read_page, // !!!
+    read_page,
     book_length,
     book_progress,
     last_read,
@@ -347,7 +328,6 @@ const updateBooksGrid = () => {
 // Create collection in firestore
 const booksCollection = collection(db, 'books');
 
-
 const lib = new Library();
 
 // Save new book when 'save' button is clicked
@@ -358,18 +338,70 @@ const addNewBook = (e) => {
 
   // Check if book is already in library; prevent duplicates
   if (lib.inLibrary(newBook)) {
-    error_msg.textContent = 'Book is already saved in your library.';
-    error_msg.classList.add('active');
+    error_title.textContent = 'Book is already saved in your library';
+    error_title.classList.add('active');
     return;
   } 
+
+  // Required fields 
+  if (newBook.title === '') {
+    error_title.textContent = 'Required';
+    error_title.classList.add('active');
+    return
+  } else {
+    error_title.textContent = '';
+    error_title.classList.remove('active');
+  }
+
+  if (newBook.author === '') {
+    error_author.textContent = 'Required';
+    error_author.classList.add('active');
+    return
+  } else {
+    error_author.textContent = '';
+    error_author.classList.remove('active');
+  }
+
+  if (newBook.read_page === '') {
+    error_readpg.textContent = 'Required'; 
+    error_readpg.classList.add('active');
+    return
+  } else if (isNaN(newBook.read_page)) {
+    error_readpg.textContent = 'Invalid'; 
+    error_readpg.classList.add('active');
+    return
+  }
+  else {
+    error_readpg.textContent = '';
+    error_readpg.classList.remove('active');
+  }
+
+  if (newBook.book_length === '') {
+    error_booklength.textContent = 'Required'; //
+    error_booklength.classList.add('active');
+    return
+  } else if (isNaN(newBook.book_length)) {
+    error_booklength.textContent = 'Invalid'; 
+    error_booklength.classList.add('active');
+    return
+  } 
+  else if (newBook.book_length < newBook.read_page) {
+    error_booklength.textContent = 'Invalid'; 
+    error_booklength.classList.add('active');
+    return
+  }
+  else {
+    error_booklength.textContent = '';
+    error_booklength.classList.remove('active');
+  }
+
 
   if (auth.currentUser) {
     // Add book into DB storage
     addBookDB(newBook);
-
-    // updateBooksGrid() should not be here; books grid for user should be shown when user logged in 
-
-  } else {
+    // updateBooksGrid() should not be here; books grid for user should be shown when user logged in
+  } 
+  else {
     // vs. add book into local storage
     lib.addBookToLib(newBook); // First, add book into library
     saveLocalStore() ;
@@ -382,13 +414,11 @@ const addNewBook = (e) => {
 }
 
 const saveLocalStore = () => {
-  
   localStorage.setItem('library', JSON.stringify(lib.books));
   //storage only supports storing and retrieving strings; setItem(keyName, keyValue)
 }
 
 // Listen to books/documents in real-time 
-
 let listenerUnsubscribe; // disable listeners when not required anymore given network usage for users and database costs for developers
 
 const listenBooksRealTime = (uid) => {
@@ -408,7 +438,6 @@ const listenBooksRealTime = (uid) => {
       // Transform array of docs (with content as a map) into array of book objects
       lib.books = bookConverterFS(allBooks)
       updateBooksGrid();
-    
   });
 }
 
@@ -419,7 +448,7 @@ const bookConverterFS = (someBookArray) => {
       bk.data().title, 
       bk.data().author,
       bk.data().genres, 
-      bk.data().read_page, // !!!
+      bk.data().read_page, 
       bk.data().book_length,
       bk.data().book_progress,
       bk.data().last_read,
@@ -428,7 +457,6 @@ const bookConverterFS = (someBookArray) => {
     );
   })
 }
-
 
 const addBookDB = async (newBook) => {
   try {
@@ -440,7 +468,7 @@ const addBookDB = async (newBook) => {
       title: newBook.title,
       author: newBook.author,
       genres: newBook.genres,
-      read_page: newBook.read_page, // !!!
+      read_page: newBook.read_page, 
       book_length: newBook.book_length,
       book_progress: newBook.book_progress,
       last_read: newBook.last_read,
@@ -481,7 +509,6 @@ const monitorAuthState = async () => {
       console.log('no user');
       // disable listener 
       if (listenerUnsubscribe) {listenerUnsubscribe();}
-    
       // function to reset lib.books to books in localstorage
       resetLocalStore()
       updateBooksGrid();
@@ -496,9 +523,7 @@ const resetLocalStore = () => {
   const libArrayObject = JSON.parse(localStorage.getItem('library'));
   
   // if not null, iterate over Javascript object and transform each element into Book object
-  libArrayObject ? 
-  lib.books = libArrayObject.map((bookJSON) => bookConverterJSON(bookJSON)) : 
-  lib.books = [];
+  libArrayObject ? lib.books = libArrayObject.map((bookJSON) => bookConverterJSON(bookJSON)) : lib.books = [];
 }
 
 const bookConverterJSON = (bk) => {
@@ -506,7 +531,7 @@ const bookConverterJSON = (bk) => {
     bk.title, 
     bk.author,
     bk.genres, 
-    bk.read_page, // !!!
+    bk.read_page,
     bk.book_length,
     bk.book_progress,
     bk.last_read,
@@ -574,13 +599,13 @@ const createBookCard = (book) => {
   const numDaysAgo = returnDays(new Date(book.last_read), currentDate); // https://stackoverflow.com/questions/4929382/javascript-getfullyear-is-not-a-function
 
   // reflect the read_status
-  if (book.read_status) {
+  if (book.read_status) 
+  {
     book.reflect_status = 'Finished';
     // include flag (class) to reflect readBtn color
     book.update_status = 'success'
-
-
-  } else {
+  } 
+  else {
     book.reflect_status = 'In Progress';
     // include flag (class) to reflect readBtn color
     book.update_status = 'failure'
@@ -616,8 +641,7 @@ const createBookCard = (book) => {
   <div class="button-group">
       <button id="editBtn" class="btn">Edit</button>
       <button id="removeBtn" class="btn">Remove</button>
-  </div> 
-  `;
+  </div>`;
   
   // Append bookCard to BooksGrid
   booksGrid.appendChild(bookCard);
@@ -636,7 +660,7 @@ const createBookCard = (book) => {
   removeBtns.forEach(btn => btn.addEventListener('click', removeBook)); 
 }
 
-let prevBkTitle 
+let prevBkTitle; 
 
 const editBookForm = (e) => {
   e.preventDefault();
@@ -712,7 +736,6 @@ const updateToggleDB = async (book) => {
   const bookRef = doc(db, 'books', await getBookIdDB(book.title));
 
   updateDoc(bookRef, data);
-
   console.log(book.read_status);
 }
 
@@ -721,8 +744,7 @@ const getBookIdDB = async (title) => {
   const q = query(
     booksCollection, // 1st constraint: query against a collection
     where('userId', '==', auth.currentUser.uid), // 2nd constraint: books added by certain user
-    where('title', '==', title)
-  )
+    where('title', '==', title))
 
   const bookSnapshot = await getDocs(q);
   // changes array (of 1 element) to String
@@ -734,6 +756,8 @@ const getBookIdDB = async (title) => {
 const getPrevBookModal = (book) => {
   bookForm.reset();
   const editModalTitle = document.getElementById('editModal');
+  addform_subhead1.classList.remove('active');
+
   editModalTitle.textContent = "Edit fields below."
 
   saveBookBtn.classList.remove('active');
@@ -749,17 +773,17 @@ const getPrevBookModal = (book) => {
 
   checkboxes.forEach(checkbox => {
     let i = 0;
-    while (i < mySelectedGenres.length) {
-      if (checkbox.value == mySelectedGenres[i]) {
-        checkbox.checked = true; 
-      }
+    while (i < mySelectedGenres.length) 
+    {
+      if (checkbox.value == mySelectedGenres[i]) 
+      { checkbox.checked = true; }
       i++;
     }
   })
 
   dropdownButton.innerText = mySelectedGenres.length > 0 ? mySelectedGenres.join(', ') : 'Select Book Genre(s)'; 
 
-  read_pg_input.value = book.read_page; // !!!
+  read_pg_input.value = book.read_page; 
   book_length_input.value = book.book_length;
   book_progress_input.innerHTML = book.book_progress;
   
@@ -773,7 +797,6 @@ const getPrevBookModal = (book) => {
 };
 
 const editBookDB = (e) => {
-
   console.log('editBookBtn is called')
   
   e.preventDefault();

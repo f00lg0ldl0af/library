@@ -71,12 +71,13 @@
 
     <div class="popmodal" id="bookModal">
         <p>
-            <span>Enjoyed reading? </span>
-            <span>Save this series now. </span>
-            <div id="editModal"></div>
+
+                <span class="subhead" id="subhead1">Enjoyed reading this? Save it now. </span>
+                <div id="editModal"></div>
         </p>
+ 
         
-        <form action="#" method="post"  class="book-form" id="bookForm">
+        <form action="#" method="post" class="book-form" id="bookForm">
             
             <div class="input-row">
                 <div>
@@ -87,13 +88,16 @@
                     <div class="error" id="errorTitle"></div>
                 </div>
     
-                <div class="input-container">
-                    <label for="author">Author</label>
-                    <input type="text" name="author" id="author" placeholder="Author" required>
+                <div>
+                    <div class="input-container">
+                        <label for="author">Author</label>
+                        <input type="text" name="author" id="author" placeholder="Author" required>
+                        
+                    </div>
+                    <div class="error" id="errorAuthor"></div>
                 </div>
-                
-
             </div>
+
             <div class="dropup"> 
                 <button class="btn btn-dark dropdown-toggle"
                         type="button" 
@@ -103,6 +107,7 @@
                         aria-expanded="false"> 
                     Select Book Genre(s)
                 </button> 
+
                 <ul class="dropdown-menu inner-wrap" 
                     aria-labelledby="multiSelectDropdown"> 
                   
@@ -230,19 +235,30 @@
                 </ul> 
             </div>  
 
+
             <div class="input-row">
-                <div class="input-container">
-                    <label class="space" for="page_read">Read</label>
-                    <input type="tel" name="page_read" id="pgRead" placeholder="0 pages" pattern="[0-9]{1,4}" required> 
+                <div>
+                    <div class="input-container">
+                        <label class="space" for="page_read">Read</label>
+                        <input type="tel" name="page_read" id="pgRead" placeholder="0 pages" pattern="[0-9]{1,4}" required> 
+                    </div>
+
+                    <div class="error" id="errorReadPage"></div>
                 </div>
+
+
 
                 <span> Of </span>
 
-                <div class="input-container">
-                    <label for="total_pages"></label> 
-                    <input type="tel" name="total_pages" id="totalPg" placeholder="Total Book Pages" pattern="[0-9]{1,4}" required>
-                    
+                <div>
+                    <div class="input-container">
+                        <label for="total_pages"></label> 
+                        <input type="tel" name="total_pages" id="totalPg" placeholder="Total Book Pages" pattern="[0-9]{1,4}" required>
+                        
+                    </div>
+                    <div class="error" id="errorBKLength"></div>
                 </div>
+                
                 <span> Pages </span>
                 
             </div>
@@ -257,7 +273,7 @@
             <div class="input-row">
                 <div class="input-container">
                     <label for="last_read" class="space">Last Read</label>
-                    <input type="date" name="last_read" id="lastRead"/>
+                    <input type="date" name="last_read" id="lastRead" required/>
                 </div>
 
                 <div class="input-container">

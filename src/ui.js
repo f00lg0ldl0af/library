@@ -9,8 +9,12 @@ export const profileImg = document.getElementById('profileimg')
 
 export const overlay = document.getElementById('overlay');
 
-export const error_msg = document.getElementById('errorTitle');
+export const error_title = document.getElementById('errorTitle');
+export const error_author = document.getElementById('errorAuthor');
+export const error_readpg = document.getElementById('errorReadPage');
+export const error_booklength = document.getElementById('errorBKLength');
 
+export const addform_subhead1 = document.getElementById('subhead1');
 
 // Input Fields
 

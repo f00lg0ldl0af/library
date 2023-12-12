@@ -44,6 +44,3 @@ This is a small library app where you can save books you enjoyed reading and tra
 <br>
 
 ### To-Dos
-- Resolve the issue of star glpyhs not appearing
-- Create new data field storing last read page
-- Add form validation for required fields and respective error msgs   
