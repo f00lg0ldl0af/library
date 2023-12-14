@@ -51,7 +51,6 @@ import {
     stars,
 } from './ui.js'
 
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
 // https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js
 // firebase/app 
@@ -93,7 +92,6 @@ const app = initializeApp({
     appId: "1:297421141809:web:47f47e5bedc2ef1ee6e210",
     databaseURL: "https://library-485bd-default-rtdb.asia-southeast1.firebasedatabase.app/",
 });
-
 
 // create references to firebase services
 const auth = getAuth(app);
@@ -145,6 +143,10 @@ const openBookModal = () => {
   overlay.classList.add('active');
 };
 
+signInBtn.addEventListener('click', userSignIn);
+signOutBtn.addEventListener('click', userSignOut);
+addBookBtn.addEventListener('click', openBookModal);
+
 const closeBookModal = () => {
   bookForm.reset();
   bookModal.classList.remove('moveup-animate');
@@ -153,7 +155,33 @@ const closeBookModal = () => {
   editBookBtn.classList.remove('active');
   const editModalTitle = document.getElementById('editModal');
   editModalTitle.textContent = ""
-  // error msg
+}
+
+const setAccModal = (user) => {
+  if (user) {
+    user.providerData.forEach((profile) => {
+      accModal.innerHTML = `
+
+      <div class="accModalCard">
+        <div class="accModalLabel">Sign-in provider:</div> 
+        <div>${profile.providerId}</div>
+      </div>
+
+      <div class="accModalCard">
+        <div class="accModalLabel"> Logged in as: </div>
+        <div>${profile.displayName} </div>
+      </div>
+      
+
+      <div class="accModalCard">
+        <div class="accModalLabel">Email:</div> 
+        <div>${profile.email} </div>
+      </div>
+      `
+    })
+  } else {
+    accModal.innerHTML = '';
+  }
 }
 
 const openAccModal = () => {
@@ -212,6 +240,21 @@ const openAcBookModal = () => {
   acBookBtn.addEventListener('click', acBook); 
 }
 
+clearAllBtn.addEventListener('click', openAcBookModal)
+
+const closeAcBookModal = () => {
+  acBookModal.classList.remove('moveup-animate');
+  overlay.classList.remove('active');
+}
+
+const closeAllModals = () => {
+  closeBookModal();
+  closeAccModal()
+  closeAcBookModal();
+}
+
+overlay.addEventListener('click', closeAllModals)
+
 const deleteCollection = async (batchSize) => {
   const q = query(
     booksCollection, // 1st constraint: query against a collection
@@ -248,48 +291,6 @@ const deleteQueryBatch = async (db, query, resolve) => {
     deleteQueryBatch(db, query, resolve);
   })
   */}
-
-const closeAcBookModal = () => {
-  acBookModal.classList.remove('moveup-animate');
-  overlay.classList.remove('active');
-}
-
-clearAllBtn.addEventListener('click', openAcBookModal)
-
-const closeAllModals = () => {
-  closeBookModal();
-  closeAccModal()
-  closeAcBookModal();
-}
-
-const setAccModal = (user) => {
-  if (user) {
-    user.providerData.forEach((profile) => {
-      accModal.innerHTML = `
-
-      <div class="accModalCard">
-        <div class="accModalLabel">Sign-in provider:</div> 
-        <div>${profile.providerId}</div>
-      </div>
-
-      <div class="accModalCard">
-        <div class="accModalLabel"> Logged in as: </div>
-        <div>${profile.displayName} </div>
-      </div>
-      
-
-      <div class="accModalCard">
-        <div class="accModalLabel">Email:</div> 
-        <div>${profile.email} </div>
-      </div>
-      `
-    })
-  } else {
-    accModal.innerHTML = '';
-  }
-}
-
-overlay.addEventListener('click', closeAllModals)
 
 const getBookProperties = () =>  {
   const title = title_input.value;
@@ -386,7 +387,7 @@ const addNewBook = (e) => {
     return
   } 
   else if (newBook.book_length < newBook.read_page) {
-    error_booklength.textContent = 'Invalid'; 
+    error_booklength.textContent = 'Invalid. Value should be higher than pages read.'; 
     error_booklength.classList.add('active');
     return
   }
@@ -412,6 +413,10 @@ const addNewBook = (e) => {
   // close book modal
   closeBookModal() 
 }
+
+saveBookBtn.classList.add('active');
+editBookBtn.classList.remove('active');
+saveBookBtn.addEventListener('click', addNewBook);
 
 const saveLocalStore = () => {
   localStorage.setItem('library', JSON.stringify(lib.books));
@@ -483,14 +488,6 @@ const addBookDB = async (newBook) => {
   }
 }
 
-signInBtn.addEventListener('click', userSignIn);
-signOutBtn.addEventListener('click', userSignOut);
-addBookBtn.addEventListener('click', openBookModal);
-
-saveBookBtn.classList.add('active');
-editBookBtn.classList.remove('active');
-saveBookBtn.addEventListener('click', addNewBook);
-
 // Monitor auth state
 const monitorAuthState = async () => {
   onAuthStateChanged(auth, user => {
@@ -541,8 +538,9 @@ const bookConverterJSON = (bk) => {
 
 monitorAuthState();
  
- // Loop through the "stars" NodeList
- stars.forEach((star, index1) => {
+// Interactive form fields
+// Loop through the "stars" NodeList
+stars.forEach((star, index1) => {
   star.addEventListener("click", () => {
      // Loop through the "stars" NodeList Again
      stars.forEach((star, index2) => {
@@ -556,7 +554,7 @@ monitorAuthState();
       })
       rating_input.innerHTML = `Rating: ${star_count}`;
   });  
- });
+});
 
  
 const dropdownButton = document.getElementById('multiSelectDropdown'); 
@@ -574,7 +572,6 @@ function handleCB(event) {
     dropdownButton.innerText = mySelectedGenres.length > 0 ? mySelectedGenres.join(', ') : 'Select Book Genre(s)'; 
 } 
 dropdownMenu.addEventListener('change', handleCB); 
-
 
 const returnDays = (a, b) => {
   const _MS_PER_DAY = 1000 * 60 * 60 * 24;
@@ -660,48 +657,6 @@ const createBookCard = (book) => {
   removeBtns.forEach(btn => btn.addEventListener('click', removeBook)); 
 }
 
-let prevBkTitle; 
-
-const editBookForm = (e) => {
-  e.preventDefault();
-  console.log('editBookForm was called');
-  // get book title
-  const title = e.target.parentNode.parentNode.firstChild.nextSibling.firstChild.nextSibling.innerHTML;
-  console.log(title);
-
-  // retrieve book object with said book title 
-  const book = lib.getBookFromLib(title);
-  prevBkTitle = book.title;
-
-  getPrevBookModal(book); 
-}
-
-const removeBook = (e) => {
-  e.preventDefault();
-  console.log('RemoveBook was called');
-  // get book title
-  const title = e.target.parentNode.parentNode.firstChild.nextSibling.firstChild.nextSibling.innerHTML;
-  console.log(title);
-
-   // if user is logged in
-   if (auth.currentUser) {
-    // update db by deleting book
-    delBookDB(title)
-  } else {
-  // else remove book from library 
-  lib.removeBookFromLib(title);
-  saveLocalStore() ;
-  // iterate through lib.books and append each book card 
-  updateBooksGrid();
-  } 
-}
-
-const delBookDB = async (title) => {
-  // get book reference
-  const bookRef = doc(db, 'books', await getBookIdDB(title));
-  deleteDoc(bookRef);
-}
-
 const toggleRead = (e) => {
   e.preventDefault();
   console.log('ToggleRead was called');
@@ -752,6 +707,48 @@ const getBookIdDB = async (title) => {
   console.log(bookId)
   return bookId;
 }
+let prevBkTitle; 
+
+const editBookForm = (e) => {
+  e.preventDefault();
+  console.log('editBookForm was called');
+  // get book title
+  const title = e.target.parentNode.parentNode.firstChild.nextSibling.firstChild.nextSibling.innerHTML;
+  console.log(title);
+
+  // retrieve book object with said book title 
+  const book = lib.getBookFromLib(title);
+  prevBkTitle = book.title;
+
+  getPrevBookModal(book); 
+}
+
+// this needs to be above getPrevBookModal()
+const removeBook = (e) => {
+  e.preventDefault();
+  console.log('RemoveBook was called');
+  // get book title
+  const title = e.target.parentNode.parentNode.firstChild.nextSibling.firstChild.nextSibling.innerHTML;
+  console.log(title);
+
+   // if user is logged in
+   if (auth.currentUser) {
+    // update db by deleting book
+    delBookDB(title)
+  } else {
+  // else remove book from library 
+  lib.removeBookFromLib(title);
+  saveLocalStore() ;
+  // iterate through lib.books and append each book card 
+  updateBooksGrid();
+  } 
+}
+
+const delBookDB = async (title) => {
+  // get book reference
+  const bookRef = doc(db, 'books', await getBookIdDB(title));
+  deleteDoc(bookRef);
+}
 
 const getPrevBookModal = (book) => {
   bookForm.reset();
@@ -767,7 +764,7 @@ const getPrevBookModal = (book) => {
   author_input.value = book.author;
 
   const arr = []
-  mySelectedGenres = mySelectedGenres.concat(book.genres); 
+  mySelectedGenres = arr.concat(book.genres); 
   // make sure the inputs with those values are checked
   const checkboxes = document.querySelectorAll('input[type="checkbox"]');
 
@@ -780,7 +777,7 @@ const getPrevBookModal = (book) => {
       i++;
     }
   })
-
+  
   dropdownButton.innerText = mySelectedGenres.length > 0 ? mySelectedGenres.join(', ') : 'Select Book Genre(s)'; 
 
   read_pg_input.value = book.read_page; 
@@ -795,6 +792,7 @@ const getPrevBookModal = (book) => {
   bookModal.classList.add('moveup-animate');
   overlay.classList.add('active');
 };
+
 
 const editBookDB = (e) => {
   console.log('editBookBtn is called')
