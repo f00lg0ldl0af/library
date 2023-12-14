@@ -239,7 +239,7 @@
             <div class="input-row">
                 <div>
                     <div class="input-container">
-                        <label class="space" for="page_read">Read</label>
+                        <label class="space" for="pgRead">Read</label>
                         <input type="tel" name="page_read" id="pgRead" placeholder="0 pages" pattern="[0-9]{1,4}" required> 
                     </div>
 
@@ -252,7 +252,7 @@
 
                 <div>
                     <div class="input-container">
-                        <label for="total_pages"></label> 
+                        <label for="totalPg"></label> 
                         <input type="tel" name="total_pages" id="totalPg" placeholder="Total Book Pages" pattern="[0-9]{1,4}" required>
                         
                     </div>
@@ -272,13 +272,13 @@
 
             <div class="input-row">
                 <div class="input-container">
-                    <label for="last_read" class="space">Last Read</label>
+                    <label for="lastRead" class="space">Last Read</label>
                     <input type="date" name="last_read" id="lastRead" required/>
                 </div>
 
                 <div class="input-container">
-                    <label for="" class="space">Status</label>
-                    <div class="readstatus-container">
+                    <label for=""  class="space">Status</label>
+                    <div class="readstatus-container" id="readstatus">
                         <label class="read_status">To Read
                             <input type="radio" name="radio" required>
                         </label>
