@@ -3,7 +3,7 @@ export class Book {
     title = '-',
     author = '-',
     genres = [],
-    read_page = 0, // !!!
+    read_page = 0,
     book_length = 0,
     book_progress, /* % of book_length; how many pages read */
     last_read = 0, /* (current-date) - (date-of-input); how many days ago */
@@ -14,7 +14,7 @@ export class Book {
     this.author = author;
     this.genres = genres;
 
-    this.read_page = read_page; // !!!
+    this.read_page = read_page; 
     this.book_length = book_length;
     this.book_progress = book_progress;
 
@@ -59,6 +59,7 @@ export class Library {
     this.books = []
   }
 }
+
 
 // Firestore data converter
 const bookConverter = {
